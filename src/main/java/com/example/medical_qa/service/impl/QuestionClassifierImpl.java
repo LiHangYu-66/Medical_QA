@@ -108,6 +108,9 @@ public class QuestionClassifierImpl implements QuestionClassifier {
         if (qWord(question, cureQwds) && types.contains("drug")) {
             questionTypes.add("DrugDisease");
         }
+        if (qWord(question, checkQwds) && types.contains("drug")) {
+            questionTypes.add("DrugProducer");
+        }
         if (qWord(question, checkQwds) && types.contains("disease")) {
             questionTypes.add("DiseaseCheck");
         }
@@ -128,6 +131,9 @@ public class QuestionClassifierImpl implements QuestionClassifier {
         }
         if (qWord(question, belongQwds) && types.contains("disease")) {
             questionTypes.add("DiseaseBelong");
+        }
+        if (qWord(question, belongQwds) && types.contains("producer")) {
+            questionTypes.add("ProducedBy");
         }
         // 如果没有分类到具体的问题类型，那么就按照疾病描述来回答
         if (questionTypes.isEmpty() && types.contains("disease")) {

@@ -4,10 +4,12 @@ import com.example.medical_qa.entity.Disease;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+@Repository
 
-public interface Symptom extends Neo4jRepository<Symptom, Long> {
+public interface SymptomRepository extends Neo4jRepository<SymptomRepository, Long> {
 
     // 根据疾病名称查询疾病
     @Query("MATCH (m:Disease)-[r:has_symptom]->(n:Symptom) WHERE n.name = $name RETURN m.name, r.name, n.name")
