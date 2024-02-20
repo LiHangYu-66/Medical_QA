@@ -23,37 +23,37 @@ public class QuestionPaserImpl implements QuestionPaser {
             List<String> cypher = new ArrayList<>();
             cypherMap.put("questionType", questionType);
             if (questionType == "DiseaseSymptom") {
-                cypher = buildCypher(questionType, entityDict.get("Disease"));
+                cypher = searchGraph(questionType, entityDict.get("Disease"));
             }else if (questionType == "SymptomDisease") {
-                cypher = buildCypher(questionType, entityDict.get("Symptom"));
+                cypher = searchGraph(questionType, entityDict.get("Symptom"));
             }else if (questionType == "DiseaseAccompany") {
-                cypher = buildCypher(questionType, entityDict.get("Disease"));
+                cypher = searchGraph(questionType, entityDict.get("Disease"));
             }else if (questionType == "DiseaseNotFood") {
-                cypher = buildCypher(questionType, entityDict.get("Disease"));
+                cypher = searchGraph(questionType, entityDict.get("Disease"));
             }else if (questionType == "DiseaseFood") {
-                cypher = buildCypher(questionType, entityDict.get("Disease"));
+                cypher = searchGraph(questionType, entityDict.get("Disease"));
             }else if (questionType == "DiseaseDrug") {
-                cypher = buildCypher(questionType, entityDict.get("Disease"));
+                cypher = searchGraph(questionType, entityDict.get("Disease"));
             }else if (questionType == "DrugDisease") {
-                cypher = buildCypher(questionType, entityDict.get("Drug"));
+                cypher = searchGraph(questionType, entityDict.get("Drug"));
             }else if (questionType == "DiseaseCheck") {
-                cypher = buildCypher(questionType, entityDict.get("Disease"));
+                cypher = searchGraph(questionType, entityDict.get("Disease"));
             }else if (questionType == "DiseaseBelong") {
-                cypher = buildCypher(questionType, entityDict.get("Disease"));
+                cypher = searchGraph(questionType, entityDict.get("Disease"));
             }else if (questionType == "DiseaseCause") {
-                cypher = buildCypher(questionType, entityDict.get("Disease"));
+                cypher = searchGraph(questionType, entityDict.get("Disease"));
             }else if (questionType == "DiseasePrevent") {
-                cypher = buildCypher(questionType, entityDict.get("Disease"));
+                cypher = searchGraph(questionType, entityDict.get("Disease"));
             }else if (questionType == "DiseaseLasttime") {
-                cypher = buildCypher(questionType, entityDict.get("Disease"));
+                cypher = searchGraph(questionType, entityDict.get("Disease"));
             }else if (questionType == "DiseaseCureprob") {
-                cypher = buildCypher(questionType, entityDict.get("Disease"));
+                cypher = searchGraph(questionType, entityDict.get("Disease"));
             }else if (questionType == "DiseaseCureway") {
-                cypher = buildCypher(questionType, entityDict.get("Disease"));
+                cypher = searchGraph(questionType, entityDict.get("Disease"));
             }else if (questionType == "DiseaseEasyget") {
-                cypher = buildCypher(questionType, entityDict.get("Disease"));
+                cypher = searchGraph(questionType, entityDict.get("Disease"));
             }else if (questionType == "DiseaseDesc") {
-                cypher = buildCypher(questionType, entityDict.get("Disease"));
+                cypher = searchGraph(questionType, entityDict.get("Disease"));
             }
 
             if (cypher != null && !cypher.isEmpty()) {
@@ -65,8 +65,8 @@ public class QuestionPaserImpl implements QuestionPaser {
     }
 
 
-    public List<String> buildCypher(String questionType, List<String> entities) {
-        List<String> cypher = new ArrayList<>();
+    public List<Object> searchGraph(String questionType, List<String> entities) {
+        List<Object> cypher = new ArrayList<>();
 
         // 如果实体列表为空，直接返回空列表
         if (entities == null || entities.isEmpty()) {
@@ -78,7 +78,7 @@ public class QuestionPaserImpl implements QuestionPaser {
             switch (questionType) {
                 // 查询疾病的原因
                 case "DiseaseCause":
-                    cypher.add("MATCH (m:Disease) WHERE m.name = '" + entity + "' RETURN m.name, m.cause");
+
                     break;
                 // 查询疾病的防御措施
                 case "DiseasePrevent":

@@ -20,6 +20,9 @@ public class Drug {
     @Relationship(type = "RECOMMEND_DRUG", direction = Relationship.Direction.OUTGOING)
     private List<Disease> treatsDiseases;
 
+    @Relationship(type = "COMMON_DRUG", direction = Relationship.Direction.OUTGOING)
+    private List<Disease> commonDiseases;
+
     @Relationship(type = "PRODUCED_BY", direction = Relationship.Direction.INCOMING)
     private Producer producer;
 

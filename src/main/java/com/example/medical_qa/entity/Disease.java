@@ -28,12 +28,20 @@ public class Disease {
     @Relationship(type = "HAS_SYMPTOM", direction = Relationship.Direction.OUTGOING)
     private List<Symptom> symptoms;
 
-    @Relationship(type = "COMMON_DRUG", direction = Relationship.Direction.OUTGOING)
-    private List<Drug> drugs;
+    @Relationship(type = "ACCOMPANY_WITH", direction = Relationship.Direction.OUTGOING)
+    private List<Disease> accompanyDiseases;
 
-    // 推荐食物
+    @Relationship(type = "COMMON_DRUG", direction = Relationship.Direction.OUTGOING)
+    private List<Drug> commonDrugs;
+
+    @Relationship(type = "RECOMMEND_DRUG", direction = Relationship.Direction.OUTGOING)
+    private List<Drug> recommendDrugs;
+
     @Relationship(type = "RECOMMENDED_FOOD", direction = Relationship.Direction.OUTGOING)
     private List<Food> recommendedFoods;
+
+    @Relationship(type = "DO_FOOD", direction = Relationship.Direction.OUTGOING)
+    private List<Food> doFoods;
 
     // 忌口食物
     @Relationship(type = "AVOIDED_FOOD", direction = Relationship.Direction.OUTGOING)

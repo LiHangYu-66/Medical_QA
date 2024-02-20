@@ -10,11 +10,13 @@ import java.util.List;
 public interface DrugRepository extends Neo4jRepository<Drug, Long> {
 
     // 根据药物名称查询疾病
-    @Query("MATCH (d:Drug) WHERE d.name = $name RETURN d.treatsDiseases")
+    @Query("MATCH (m:Drug)-[r:COMMON_DRUG]->(n:Disease) WHERE m.name = $name RETURN m.name, r.name, n.name " +
+            "UNION ALL " +
+            "MATCH (m:Drug)-[r:RECOMMEND_DRUG]->(n:Disease) WHERE m.name = $name RETURN m.name, r.name, n.name")
     List<String> findDiseaseByName(@Param("name") String name);
 
     // 根据药物名称查询生产厂商
-    @Query("MATCH (d:Drug) WHERE d.name = $name RETURN d.producer")
+    @Query("MATCH (m:Drug)-[r:PRODUCED_BY]->(n:Producer) WHERE m.name = $name RETURN m.name, r.name, n.name ")
     List<String> findProducerByName(@Param("name") String name);
 
 }
