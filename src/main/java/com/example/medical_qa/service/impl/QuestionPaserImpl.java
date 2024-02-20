@@ -1,76 +1,95 @@
 package com.example.medical_qa.service.impl;
 
+import com.example.medical_qa.dao.DiseaseRepository;
+import com.example.medical_qa.dao.DrugRepository;
+import com.example.medical_qa.dao.ProducerRepository;
+import com.example.medical_qa.dao.SymptomRepository;
 import com.example.medical_qa.service.QuestionPaser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class QuestionPaserImpl implements QuestionPaser {
+    private final DiseaseRepository diseaseRepository;
+    private final DrugRepository drugRepository;
+    private final ProducerRepository producerRepository;
+    private final SymptomRepository symptomRepository;
+
+    @Autowired
+    public QuestionPaserImpl(DiseaseRepository diseaseRepository, DrugRepository drugRepository, ProducerRepository producerRepository, SymptomRepository symptomRepository) {
+        this.diseaseRepository = diseaseRepository;
+        this.drugRepository = drugRepository;
+        this.producerRepository = producerRepository;
+        this.symptomRepository = symptomRepository;
+    }
+
     @Override
     public List<Map<String, Object>> paser(Map<String, Object> intent) {
         // 医疗特征词
         Map<String, List<String>> args = (Map<String, List<String>>) intent.get("args");
         Map<String, List<String>> entityDict = buildEntityDict(args);
         List<String> questionTypes = (List<String>) intent.get("question_types");
-        Map<String, Object> cypherMap = new HashMap<>();
-        List<Map<String, Object>> cyphers = new ArrayList<>();
+        Map<String, Object> intermediateResult = new HashMap<>(); // 中间结果
+        List<Map<String, Object>> finalResult = new ArrayList<>(); // 最终结果
 
         for (String questionType : questionTypes) {
-            List<String> cypher = new ArrayList<>();
-            cypherMap.put("questionType", questionType);
-            if (questionType == "DiseaseSymptom") {
-                cypher = searchGraph(questionType, entityDict.get("Disease"));
-            }else if (questionType == "SymptomDisease") {
-                cypher = searchGraph(questionType, entityDict.get("Symptom"));
-            }else if (questionType == "DiseaseAccompany") {
-                cypher = searchGraph(questionType, entityDict.get("Disease"));
-            }else if (questionType == "DiseaseNotFood") {
-                cypher = searchGraph(questionType, entityDict.get("Disease"));
-            }else if (questionType == "DiseaseFood") {
-                cypher = searchGraph(questionType, entityDict.get("Disease"));
-            }else if (questionType == "DiseaseDrug") {
-                cypher = searchGraph(questionType, entityDict.get("Disease"));
-            }else if (questionType == "DrugDisease") {
-                cypher = searchGraph(questionType, entityDict.get("Drug"));
-            }else if (questionType == "DiseaseCheck") {
-                cypher = searchGraph(questionType, entityDict.get("Disease"));
-            }else if (questionType == "DiseaseBelong") {
-                cypher = searchGraph(questionType, entityDict.get("Disease"));
-            }else if (questionType == "DiseaseCause") {
-                cypher = searchGraph(questionType, entityDict.get("Disease"));
-            }else if (questionType == "DiseasePrevent") {
-                cypher = searchGraph(questionType, entityDict.get("Disease"));
-            }else if (questionType == "DiseaseLasttime") {
-                cypher = searchGraph(questionType, entityDict.get("Disease"));
-            }else if (questionType == "DiseaseCureprob") {
-                cypher = searchGraph(questionType, entityDict.get("Disease"));
-            }else if (questionType == "DiseaseCureway") {
-                cypher = searchGraph(questionType, entityDict.get("Disease"));
-            }else if (questionType == "DiseaseEasyget") {
-                cypher = searchGraph(questionType, entityDict.get("Disease"));
-            }else if (questionType == "DiseaseDesc") {
-                cypher = searchGraph(questionType, entityDict.get("Disease"));
+            List<Object> answer = new ArrayList<>(); // 查询答案
+            intermediateResult.put("questionType", questionType);
+            if (Objects.equals(questionType, "DiseaseSymptom")) {
+                answer = searchGraph(questionType, entityDict.get("Disease"));
+            } else if (Objects.equals(questionType, "DiseaseAccompany")) {
+                answer = searchGraph(questionType, entityDict.get("Disease"));
+            } else if (Objects.equals(questionType, "DiseaseNotFood")) {
+                answer = searchGraph(questionType, entityDict.get("Disease"));
+            } else if (Objects.equals(questionType, "DiseaseFood")) {
+                answer = searchGraph(questionType, entityDict.get("Disease"));
+            } else if (Objects.equals(questionType, "DiseaseDrug")) {
+                answer = searchGraph(questionType, entityDict.get("Disease"));
+            } else if (Objects.equals(questionType, "DiseaseCheck")) {
+                answer = searchGraph(questionType, entityDict.get("Disease"));
+            } else if (Objects.equals(questionType, "DiseaseBelong")) {
+                answer = searchGraph(questionType, entityDict.get("Disease"));
+            } else if (Objects.equals(questionType, "DiseaseCause")) {
+                answer = searchGraph(questionType, entityDict.get("Disease"));
+            } else if (Objects.equals(questionType, "DiseasePrevent")) {
+                answer = searchGraph(questionType, entityDict.get("Disease"));
+            } else if (Objects.equals(questionType, "DiseaseLasttime")) {
+                answer = searchGraph(questionType, entityDict.get("Disease"));
+            } else if (Objects.equals(questionType, "DiseaseCureprob")) {
+                answer = searchGraph(questionType, entityDict.get("Disease"));
+            } else if (Objects.equals(questionType, "DiseaseCureway")) {
+                answer = searchGraph(questionType, entityDict.get("Disease"));
+            } else if (Objects.equals(questionType, "DiseaseEasyget")) {
+                answer = searchGraph(questionType, entityDict.get("Disease"));
+            } else if (Objects.equals(questionType, "DiseaseDesc")) {
+                answer = searchGraph(questionType, entityDict.get("Disease"));
+            } else if (Objects.equals(questionType, "DrugProducer")) {
+                answer = searchGraph(questionType, entityDict.get("Drug"));
+            } else if (Objects.equals(questionType, "DrugDisease")) {
+                answer = searchGraph(questionType, entityDict.get("Drug"));
+            } else if (Objects.equals(questionType, "PRODUCED_BY")) {
+                answer = searchGraph(questionType, entityDict.get("Producer"));
+            } else if (Objects.equals(questionType, "SymptomDisease")) {
+                answer = searchGraph(questionType, entityDict.get("Symptom"));
             }
 
-            if (cypher != null && !cypher.isEmpty()) {
-                cypherMap.put("cypher", cypher);
+            if (answer != null && !answer.isEmpty()) {
+                intermediateResult.put("answer", answer);
             }
-            cyphers.add((Map<String, Object>) cypher);
+            finalResult.add(intermediateResult);
         }
-        return cyphers;
+        return finalResult;
     }
 
 
     public List<Object> searchGraph(String questionType, List<String> entities) {
-        List<Object> cypher = new ArrayList<>();
+        List<Object> answer = new ArrayList<>();
 
         // 如果实体列表为空，直接返回空列表
         if (entities == null || entities.isEmpty()) {
-            return cypher;
+            return answer;
         }
 
         // 遍历每个实体，根据问题类型生成相应的 SQL 查询
@@ -78,87 +97,79 @@ public class QuestionPaserImpl implements QuestionPaser {
             switch (questionType) {
                 // 查询疾病的原因
                 case "DiseaseCause":
-
+                    answer.addAll(diseaseRepository.findCauseByName(entity));
                     break;
                 // 查询疾病的防御措施
                 case "DiseasePrevent":
-                    cypher.add("MATCH (m:Disease) WHERE m.name = '" + entity + "' RETURN m.name, m.prevent");
+                    answer.addAll(diseaseRepository.findPreventByName(entity));
                     break;
                 // 查询疾病的持续时间
                 case "DiseaseLasttime":
-                    cypher.add("MATCH (m:Disease) WHERE m.name = '" + entity + "' RETURN m.name, m.cure_lasttime");
+                    answer.addAll(diseaseRepository.findCureLastTimeByName(entity));
                     break;
                 // 查询疾病的治愈概率
                 case "DiseaseCureprob":
-                    cypher.add("MATCH (m:Disease) WHERE m.name = '" + entity + "' RETURN m.name, m.cured_prob");
+                    answer.addAll(diseaseRepository.findCuredProbByName(entity));
                     break;
                 // 查询疾病的治疗方式
                 case "DiseaseCureway":
-                    cypher.add("MATCH (m:Disease) WHERE m.name = '" + entity + "' RETURN m.name, m.cure_way");
+                    answer.addAll(diseaseRepository.findCureWayByName(entity));
                     break;
                 // 查询疾病的易发人群
                 case "DiseaseEasyget":
-                    cypher.add("MATCH (m:Disease) WHERE m.name = '" + entity + "' RETURN m.name, m.easy_get");
+                    answer.addAll(diseaseRepository.findEasyGetByName(entity));
                     break;
                 // 查询疾病的相关介绍
                 case "DiseaseDesc":
-                    cypher.add("MATCH (m:Disease) WHERE m.name = '" + entity + "' RETURN m.name, m.desc");
+                    answer.addAll(diseaseRepository.findDescByName(entity));
                     break;
                 // 查询疾病有哪些症状
                 case "DiseaseSymptom":
-                    cypher.add("MATCH (m:Disease)-[r:has_symptom]->(n:Symptom) WHERE m.name = '" + entity + "' RETURN m.name, r.name, n.name");
-                    break;
-                // 查询症状属于哪些疾病
-                case "SymptomDisease":
-                    cypher.add("MATCH (m:Disease)-[r:has_symptom]->(n:Symptom) WHERE n.name = '" + entity + "' RETURN m.name, r.name, n.name");
+                    answer.addAll(diseaseRepository.findSymptomByName(entity));
                     break;
                 // 查询疾病的并发症
                 case "DiseaseAccompany":
-                    cypher.add("MATCH (m:Disease)-[r:acompany_with]->(n:Disease) WHERE m.name = '" + entity + "' RETURN m.name, r.name, n.name");
-                    cypher.add("MATCH (m:Disease)-[r:acompany_with]->(n:Disease) WHERE n.name = '" + entity + "' RETURN m.name, r.name, n.name");
+                    answer.addAll(diseaseRepository.findAccompanyDiseaseByName(entity));
                     break;
                 // 查询疾病的忌口
                 case "DiseaseNotFood":
-                    cypher.add("MATCH (m:Disease)-[r:no_eat]->(n:Food) WHERE m.name = '" + entity + "' RETURN m.name, r.name, n.name");
+                    answer.addAll(diseaseRepository.findAvoidedFoodByName(entity));
                     break;
                 // 查询疾病建议吃的东西
                 case "DiseaseFood":
-                    cypher.add("MATCH (m:Disease)-[r:do_eat]->(n:Food) WHERE m.name = '" + entity + "' RETURN m.name, r.name, n.name");
-                    cypher.add("MATCH (m:Disease)-[r:recommand_eat]->(n:Food) WHERE m.name = '" + entity + "' RETURN m.name, r.name, n.name");
+                    answer.addAll(diseaseRepository.findRecommendAndDoDrugs(entity));
                     break;
-//                // 已知忌口查疾病
-//                case "food_not_disease":
-//                    cypher.add("MATCH (m:Disease)-[r:no_eat]->(n:Food) WHERE n.name = '" + entity + "' RETURN m.name, r.name, n.name");
-//                    break;
-//                // 已知推荐查疾病
-//                case "food_do_disease":
-//                    cypher.add("MATCH (m:Disease)-[r:do_eat]->(n:Food) WHERE n.name = '" + entity + "' RETURN m.name, r.name, n.name");
-//                    cypher.add("MATCH (m:Disease)-[r:recommand_eat]->(n:Food) WHERE n.name = '" + entity + "' RETURN m.name, r.name, n.name");
-//                    break;
                 // 查询疾病常用药品－药品别名记得扩充
                 case "DiseaseDrug":
-                    cypher.add("MATCH (m:Disease)-[r:common_drug]->(n:Drug) WHERE m.name = '" + entity + "' RETURN m.name, r.name, n.name");
-                    cypher.add("MATCH (m:Disease)-[r:recommand_drug]->(n:Drug) WHERE m.name = '" + entity + "' RETURN m.name, r.name, n.name");
-                    break;
-                // 已知药品查询能够治疗的疾病
-                case "DrugDisease":
-                    cypher.add("MATCH (m:Disease)-[r:common_drug]->(n:Drug) WHERE n.name = '" + entity + "' RETURN m.name, r.name, n.name");
-                    cypher.add("MATCH (m:Disease)-[r:recommand_drug]->(n:Drug) WHERE n.name = '" + entity + "' RETURN m.name, r.name, n.name");
+                    answer.addAll(diseaseRepository.findCommonAndRecommendedDrugs(entity));
                     break;
                 // 查询疾病应该进行的检查
                 case "DiseaseCheck":
-                    cypher.add("MATCH (m:Disease)-[r:need_check]->(n:Check) WHERE m.name = '" + entity + "' RETURN m.name, r.name, n.name");
+                    answer.addAll(diseaseRepository.findCheckByName(entity));
                     break;
-//                // 已知检查查询疾病
-//                case "check_disease":
-//                    cypher.add("MATCH (m:Disease)-[r:need_check]->(n:Check) WHERE n.name = '" + entity + "' RETURN m.name, r.name, n.name");
-//                    break;
+                // 查询疾病所属科室
                 case "DiseaseBelong":
-                    cypher.add("MATCH (m:Disease)-[r:belongs_to]->(n:Department) WHERE m.name = '" + entity + "' RETURN m.name, r.name, n.name");
+                    answer.addAll(diseaseRepository.findDepartmentByName(entity));
+                    break;
+                // 已知药品查询能够治疗的疾病
+                case "DrugDisease":
+                    answer.addAll(drugRepository.findDiseaseByName(entity));
+                    break;
+                // 查询药品的生产厂商
+                case "DrugProducer":
+                    answer.addAll(drugRepository.findProducerByName(entity));
+                    break;
+                case "ProducedBy":
+                    answer.addAll(producerRepository.findDrugsByProducerName(entity));
+                    break;
+                // 查询症状属于哪些疾病
+                case "SymptomDisease":
+                    answer.addAll(symptomRepository.findDiseaseBySymptomName(entity));
+                    break;
             }
         }
 
-        return cypher;
+        return answer;
     }
 
 

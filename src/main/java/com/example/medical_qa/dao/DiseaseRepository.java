@@ -44,7 +44,6 @@ public interface DiseaseRepository extends Neo4jRepository<Disease, Long> {
     @Query("MATCH (m:Disease)-[r:BELONGS_TO]->(n:Department) WHERE m.name = $name RETURN m.name, r.name, n.name")
     List<String> findDepartmentByName(@Param("name") String name);
 
-
     // 根据疾病名称查询疾病的病因
     @Query("MATCH (d:Disease) WHERE d.name = $name RETURN d.name,d.cause")
     List<String> findCauseByName(@Param("name") String name);

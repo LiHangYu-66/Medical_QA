@@ -1,6 +1,8 @@
 package com.example.medical_qa.service;
 
+import java.util.List;
+
 public interface MedicalQaService {
-    String processMedicalQuestion(String question);
+    List<String> processMedicalQuestion(String question);
 }
 
